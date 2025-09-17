@@ -6,7 +6,7 @@ import(
 func main() {
 
 	input := `int x = 10;
-int w = 1;
+int w = 1.1;
 float y = 3.14;
 z == x;
 x = x++;

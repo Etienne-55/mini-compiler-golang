@@ -5,16 +5,14 @@ import (
 )
 
 
-// Scanner represents the lexical analyzer
 type Scanner struct {
 	input    string
-	position int  // current position (current char)
-	line     int  // current line number
-	column   int  // current column number
+	position int
+	line     int
+	column   int 
 	keywords map[string]TokenType
 }
 
-// NewScanner creates a new lexical scanner
 func NewScanner(input string) *Scanner {
 	scanner := &Scanner{
 		input:  input,
@@ -34,7 +32,6 @@ func NewScanner(input string) *Scanner {
 	return scanner
 }
 
-// currentChar returns the current character or 0 if at end
 func (s *Scanner) currentChar() byte {
 	if s.position >= len(s.input) {
 		return 0
@@ -42,7 +39,6 @@ func (s *Scanner) currentChar() byte {
 	return s.input[s.position]
 }
 
-// peekChar returns the next character without advancing position
 func (s *Scanner) peekChar() byte {
 	if s.position+1 >= len(s.input) {
 		return 0
@@ -50,7 +46,6 @@ func (s *Scanner) peekChar() byte {
 	return s.input[s.position+1]
 }
 
-// advance moves to the next character
 func (s *Scanner) advance() {
 	if s.position < len(s.input) && s.input[s.position] == '\n' {
 		s.line++
@@ -61,29 +56,26 @@ func (s *Scanner) advance() {
 	s.position++
 }
 
-// skipWhitespace skips whitespace characters
 func (s *Scanner) skipWhitespace() {
 	for s.currentChar() != 0 && isWhitespace(s.currentChar()) {
 		s.advance()
 	}
 }
 
-// skipLineComment skips // style comments
 func (s *Scanner) skipLineComment() {
 	for s.currentChar() != 0 && s.currentChar() != '\n' {
 		s.advance()
 	}
 }
 
-// skipBlockComment skips /* */ style comments
 func (s *Scanner) skipBlockComment() error {
-	s.advance() // skip '/'
-	s.advance() // skip '*'
+	s.advance()
+	s.advance()
 	
 	for s.currentChar() != 0 {
 		if s.currentChar() == '*' && s.peekChar() == '/' {
-			s.advance() // skip '*'
-			s.advance() // skip '/'
+			s.advance()
+			s.advance()
 			return nil
 		}
 		s.advance()
@@ -92,7 +84,6 @@ func (s *Scanner) skipBlockComment() error {
 	return fmt.Errorf("unterminated block comment")
 }
 
-// readIdentifier reads an identifier or keyword
 func (s *Scanner) readIdentifier() string {
 	start := s.position
 	
